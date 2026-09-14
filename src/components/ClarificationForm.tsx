@@ -1,5 +1,5 @@
 import { useExperiment } from "../context/ExperimentContext";
-import { HiSparkles, HiCheck } from "react-icons/hi2";
+import { HiSparkles } from "react-icons/hi2";
 
 export default function ClarificationForm() {
   const {
@@ -66,7 +66,6 @@ export default function ClarificationForm() {
       {/* Questions Form */}
       <div className="space-y-5 sm:space-y-6">
         {experiment.missingInformation.map((question) => {
-          const isFilled = Boolean(clarifications[question]?.trim());
           const fieldId = `clarification-${question.replace(/\s+/g, "-").toLowerCase()}`;
 
           return (

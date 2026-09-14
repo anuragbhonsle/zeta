@@ -51,7 +51,7 @@ export default function ExperimentResult() {
             <HiSparkles className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
             Entry Condition
           </div>
-          <p className="mt-1.5 text-xs sm:text-sm font-medium leading-relaxed text-zinc-200 break-words">
+          <p className="mt-1.5 text-xs sm:text-sm font-medium leading-relaxed text-zinc-200 wrap-break-word">
             {experiment.entryCondition || "Not specified"}
           </p>
         </div>
@@ -62,7 +62,7 @@ export default function ExperimentResult() {
             <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
               Exit Condition
             </p>
-            <p className="mt-1.5 text-xs sm:text-sm font-medium leading-relaxed text-zinc-300 break-words">
+            <p className="mt-1.5 text-xs sm:text-sm font-medium leading-relaxed text-zinc-300 wrap-break-word">
               {experiment.exitCondition || "Not specified"}
             </p>
           </div>
@@ -71,7 +71,7 @@ export default function ExperimentResult() {
             <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
               Holding Period
             </p>
-            <p className="mt-1.5 text-xs sm:text-sm font-medium leading-relaxed text-zinc-300 break-words">
+            <p className="mt-1.5 text-xs sm:text-sm font-medium leading-relaxed text-zinc-300 wrap-break-word">
               {experiment.holdingPeriod || "Not specified"}
             </p>
           </div>
@@ -118,7 +118,7 @@ export default function ExperimentResult() {
             <HiBeaker className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
             Research Objective
           </div>
-          <p className="mt-2 text-xs sm:text-sm leading-relaxed text-zinc-200 break-words">
+          <p className="mt-2 text-xs sm:text-sm leading-relaxed text-zinc-200 wrap-break-word">
             {experiment.objective}
           </p>
         </div>
