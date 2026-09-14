@@ -188,8 +188,11 @@ export function GooeyInput({
 
   const buttonVariants = useMemo(
     () => ({
-      collapsed: { width: collapsedWidth, marginLeft: 0 },
-      expanded: { width: expandedWidth, marginLeft: expandedOffset },
+      collapsed: { width: `min(${collapsedWidth}px, 90vw)`, marginLeft: 0 },
+      expanded: {
+        width: `min(${expandedWidth}px, 90vw)`,
+        marginLeft: expandedOffset,
+      },
     }),
     [collapsedWidth, expandedWidth, expandedOffset],
   );
