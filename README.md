@@ -4,7 +4,7 @@
 
 An AI-native trading research assistant that turns a natural-language market question into a structured, testable experiment and knows when it doesn't have enough information to do that responsibly. Built with **React**, **TypeScript**, and **Vite** on the frontend, a **Node.js + Express** backend, **Google Gemini** for query structuring, and **MongoDB** for persistence.
 
-## ***Live Site:*** [zetaa.vercel.app](https://zetaa.vercel.app/)
+## **_Live Site:_** [zetaa.vercel.app](https://zetaa.vercel.app/)
 
 ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
@@ -20,7 +20,7 @@ An AI-native trading research assistant that turns a natural-language market que
 
 ## The Problem
 
-Traders think in questions — *"Does buying NIFTY after a 1% fall work better during high-volatility periods?"* — but backtesting engines need precise, unambiguous rules. Someone has to sit in between and translate loose intuition into a testable specification: what instrument, what timeframe, what counts as "high volatility," what "works better" even means.
+Traders think in questions — _"Does buying NIFTY after a 1% fall work better during high-volatility periods?"_ — but backtesting engines need precise, unambiguous rules. Someone has to sit in between and translate loose intuition into a testable specification: what instrument, what timeframe, what counts as "high volatility," what "works better" even means.
 
 Zetaa is a small, functional slice of a much larger AI-native research platform. It automates that translation step:
 
@@ -46,16 +46,16 @@ It deliberately stops there — no backtesting, no predictions, no trading advic
 
 ## Tech Stack
 
-| Layer | Technologies |
-|---|---|
-| **Frontend** | React 19, TypeScript, Vite |
-| **Styling / UI** | Tailwind CSS v4, Framer Motion, Lucide / Tabler / React Icons |
-| **State** | Context API (`ExperimentContext`) |
-| **Backend** | Node.js, Express, TypeScript |
-| **AI / LLM** | Google Gemini (`gemini-3.1-flash-lite`) via `@google/genai`, constrained with a JSON schema |
-| **Database** | MongoDB via Mongoose |
-| **Tooling** | ESLint, Axios |
-| **Deployment** | Vercel (Frontend), Render (Backend) |
+| Layer            | Technologies                                                                                |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| **Frontend**     | React 19, TypeScript, Vite                                                                  |
+| **Styling / UI** | Tailwind CSS v4, Framer Motion, Lucide / Tabler / React Icons                               |
+| **State**        | Context API (`ExperimentContext`)                                                           |
+| **Backend**      | Node.js, Express, TypeScript                                                                |
+| **AI / LLM**     | Google Gemini (`gemini-3.1-flash-lite`) via `@google/genai`, constrained with a JSON schema |
+| **Database**     | MongoDB via Mongoose                                                                        |
+| **Tooling**      | ESLint, Axios                                                                               |
+| **Deployment**   | Vercel (Frontend), Render (Backend)                                                         |
 
 ---
 
@@ -79,11 +79,11 @@ Every question flows through the same three-step pipeline. The first call may co
                                                  └───────────────┘
 ```
 
-| Step | What happens |
-|---|---|
-| 1 | Frontend sends the raw question (and, on a second pass, the user's clarification answers) |
-| 2 | Backend prompts Gemini with a strict system instruction — *extract, never advise* — and a fixed `responseSchema`, so the reply is always valid JSON in the expected shape |
-| 3 | Only experiments that come back `"status": "complete"` are written to MongoDB — incomplete drafts are shown to the user but never persisted |
+| Step | What happens                                                                                                                                                              |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Frontend sends the raw question (and, on a second pass, the user's clarification answers)                                                                                 |
+| 2    | Backend prompts Gemini with a strict system instruction — _extract, never advise_ — and a fixed `responseSchema`, so the reply is always valid JSON in the expected shape |
+| 3    | Only experiments that come back `"status": "complete"` are written to MongoDB — incomplete drafts are shown to the user but never persisted                               |
 
 ---
 
@@ -134,6 +134,7 @@ zeta/
 ## Example
 
 **Input:**
+
 > "Does buying NIFTY after a 1% fall work better during high-volatility periods?"
 
 **Experiment Schema** — the backend enforces this shape via Gemini's structured output (`@google/genai`'s `Type` definitions), so the model's reply is always valid JSON in this exact form, never free text:
@@ -167,6 +168,7 @@ const experimentSchema = {
 ```
 
 **First pass — incomplete:**
+
 ```json
 {
   "instrument": "NIFTY",
@@ -184,6 +186,7 @@ const experimentSchema = {
 ```
 
 **After the user answers "hold for 5 trading days":**
+
 ```json
 {
   "instrument": "NIFTY",
@@ -203,18 +206,26 @@ const experimentSchema = {
 If the original question specifies an exit rule up front, the model extracts it directly and skips clarification entirely — the pipeline only asks for what's actually missing.
 
 **Input:**
-> "Buy NIFTY futures after a 2% intraday drop. Exit at 3% profit or after 3 trading days, whichever comes first."
+
+> "Does buying NIFTY 50 after it falls by at least 1% from the previous trading day's close have a positive edge on the daily timeframe? Enter at the next day's market open and exit after holding for 5 trading days. Only consider high-volatility periods where India VIX is above 25 and NIFTY's 14-day ATR is above its 20-day average. Compare this against normal-volatility periods, defined as India VIX at or below 25 and NIFTY's 14-day ATR at or below its 20-day average. I want to determine whether the strategy performs better during high-volatility periods than during normal-volatility periods.
+> "
 
 **Output — complete on the first pass:**
+
 ```json
 {
-  "instrument": "NIFTY Futures",
-  "timeframe": "Intraday / Daily",
-  "entryCondition": "NIFTY drops 2% or more intraday",
-  "exitCondition": "Exit at 3% profit target, or after 3 trading days — whichever comes first",
-  "holdingPeriod": "Up to 3 trading days",
-  "filters": [],
-  "objective": "Determine whether buying NIFTY futures after a 2% intraday drop, with a defined profit target and time-based exit, produces a positive edge.",
+  "instrument": "NIFTY 50",
+  "timeframe": "Daily",
+  "entryCondition": "NIFTY 50 price falls by >= 1% from previous trading day's close; enter at next day's market open.",
+  "exitCondition": "Close position after 5 trading days.",
+  "holdingPeriod": "5 trading days",
+  "filters": [
+    "India VIX > 25",
+    "NIFTY 14-day ATR > 20-day average of 14-day ATR",
+    "India VIX <= 25",
+    "NIFTY 14-day ATR <= 20-day average of 14-day ATR"
+  ],
+  "objective": "Determine if the strategy has a higher performance edge during high-volatility periods compared to normal-volatility periods.",
   "missingInformation": [],
   "status": "complete"
 }
@@ -312,6 +323,7 @@ npm run preview
 Structures a natural-language question into an experiment. Called twice in the full flow: once with just the prompt, and again with clarifications once the user has answered.
 
 **Request body**
+
 ```json
 {
   "prompt": "Does buying NIFTY after a 1% fall work better during high-volatility periods?",
@@ -320,9 +332,11 @@ Structures a natural-language question into an experiment. Called twice in the f
   }
 }
 ```
+
 `clarifications` is optional — omitted on the first call.
 
 **Response body**
+
 ```json
 {
   "message": "Experiment created",
@@ -371,11 +385,11 @@ This project uses **Vercel** for the frontend and **Render** for the backend.
 
 ## Why This Approach
 
-**Structured output over free-text chat.** A chat window that answers *"does this have an edge?"* would be actively misleading — an LLM guessing at market edge from priors is not research, it's hallucination with a nice tone. Instead, the model's only job is **extraction into a fixed schema**, enforced by Gemini's `responseSchema`. The output is always shaped like an experiment a backtester could consume next, never like an opinion.
+**Structured output over free-text chat.** A chat window that answers _"does this have an edge?"_ would be actively misleading — an LLM guessing at market edge from priors is not research, it's hallucination with a nice tone. Instead, the model's only job is **extraction into a fixed schema**, enforced by Gemini's `responseSchema`. The output is always shaped like an experiment a backtester could consume next, never like an opinion.
 
-**Ambiguity is a first-class state, not an edge case.** `status: "needs_clarification"` isn't an error path bolted on afterward — it's one of exactly two outcomes the schema allows, and the UI has a dedicated state for it. The system prompt is deliberately strict about *when* to ask: only when a detail is essential to make the experiment testable, never more than 1–2 questions, no interrogating the user about every optional parameter (stop-loss, slippage) they didn't mention. This mirrors how a good human research analyst behaves — fill in reasonable defaults, but don't silently guess at the parts that would change the meaning of the result.
+**Ambiguity is a first-class state, not an edge case.** `status: "needs_clarification"` isn't an error path bolted on afterward — it's one of exactly two outcomes the schema allows, and the UI has a dedicated state for it. The system prompt is deliberately strict about _when_ to ask: only when a detail is essential to make the experiment testable, never more than 1–2 questions, no interrogating the user about every optional parameter (stop-loss, slippage) they didn't mention. This mirrors how a good human research analyst behaves — fill in reasonable defaults, but don't silently guess at the parts that would change the meaning of the result.
 
-**Conversational memory without a chat log.** Clarifications are collected as `{ question: answer }` pairs in React state and replayed to the model alongside the *original* prompt on the second call, rather than maintaining a full chat history. This keeps the backend stateless per request and keeps the "experiment" the single unit of truth, instead of a growing transcript the model has to re-interpret each turn.
+**Conversational memory without a chat log.** Clarifications are collected as `{ question: answer }` pairs in React state and replayed to the model alongside the _original_ prompt on the second call, rather than maintaining a full chat history. This keeps the backend stateless per request and keeps the "experiment" the single unit of truth, instead of a growing transcript the model has to re-interpret each turn.
 
 **Persistence only on success.** Only completed, unambiguous experiments are written to MongoDB. This keeps the eventual "remember what it learned" store meaningful — a log of well-formed research questions — rather than a dump of half-finished, abandoned prompts.
 
@@ -385,7 +399,7 @@ This project uses **Vercel** for the frontend and **Render** for the backend.
 
 This is not a trading platform. Specifically **not** built:
 
-- No actual backtesting engine or price data — the output is a *spec* for one, not a result
+- No actual backtesting engine or price data — the output is a _spec_ for one, not a result
 - No user accounts, saved experiment history in the UI, or experiment editing after the fact
 - No support for comparing multiple experiments or iterating on a past one
 
@@ -393,7 +407,7 @@ This is not a trading platform. Specifically **not** built:
 
 - **Show past experiments** — a "recent experiments" list backed by the existing MongoDB collection; the data is already persisted, just not surfaced in the UI
 - **Editable structured fields** — let the user tweak a parsed field (e.g. change "5 trading days" to "10") directly in the result card, rather than only through the clarification flow
-- **Confidence / reasoning trace** — surface *why* the model interpreted "high volatility" a certain way (e.g. which proxy it assumed — VIX vs. realized vol), so the user can catch a wrong assumption before running an experiment on it
+- **Confidence / reasoning trace** — surface _why_ the model interpreted "high volatility" a certain way (e.g. which proxy it assumed — VIX vs. realized vol), so the user can catch a wrong assumption before running an experiment on it
 - **Patch, don't restart** — a follow-up like "actually, use a 2% threshold instead" should update the existing experiment rather than starting over
 - **Automated tests** around the controller's handling of malformed or empty model output, since the flow currently trusts Gemini's schema adherence with only a try/catch around JSON parsing
 
@@ -410,5 +424,5 @@ This is not a trading platform. Specifically **not** built:
 
 ## Contact
 
-***Live App***: [zetaa.vercel.app](https://zetaa.vercel.app/)
-***GitHub***: [@anuragbhonsle](https://github.com/anuragbhonsle)
+**_Live App_**: [zetaa.vercel.app](https://zetaa.vercel.app/)
+**_GitHub_**: [@anuragbhonsle](https://github.com/anuragbhonsle)
