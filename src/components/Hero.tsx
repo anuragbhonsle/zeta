@@ -53,23 +53,23 @@ export default function Hero() {
 
   return (
     <>
-      <BackgroundLines className="flex items-center justify-center w-full flex-col px-4">
+      <BackgroundLines className="flex items-center justify-center w-full flex-col px-4 overflow-hidden">
         <section
           className="
             relative
             w-full
-            lg:min-h-135 sm:min-h-screen
+            min-h-screen
+            lg:min-h-135
             mt-4 mb-20
             flex
             flex-col
             items-center
             justify-start
-            pt-24 sm:pt-32
-            px-4
+            pt-20 sm:pt-32
+            px-2 sm:px-4
             text-zinc-900
             selection:bg-black
             selection:text-white
-            overflow-visible 
           "
         >
           {/* Animated Container */}
@@ -83,7 +83,8 @@ export default function Hero() {
               flex
               flex-col
               items-center
-              gap-10
+              mx-auto
+              gap-8 sm:gap-10
               max-w-xl
               text-center
               w-full
@@ -95,10 +96,11 @@ export default function Hero() {
               className="
                 font-bold
                 text-4xl
-                sm:text-4xl
+                sm:text-5xl
                 lg:text-7xl
                 tracking-tight
                 text-black
+                w-full
               "
             >
               Ask the{" "}
@@ -132,9 +134,9 @@ export default function Hero() {
               transition={{
                 layout: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
               }}
-              className="w-full relative"
+              className="w-full relative flex flex-col items-center"
             >
-              <AnimatePresence mode="popLayout">
+              <AnimatePresence mode="wait">
                 {/* Skeleton Loader */}
                 {isBuilding && !experiment?.status && (
                   <motion.div
