@@ -226,8 +226,9 @@ export function GooeyInput({
   };
 
   const handleSelectExample = (example: string) => {
+    inputRef.current?.blur();
     setSearchText(example);
-    updateFocus(false);
+    requestAnimationFrame(() => updateFocus(false));
   };
 
   const surfaceClass =
@@ -284,7 +285,7 @@ export function GooeyInput({
               disabled={disabled}
               placeholder={placeholder}
               className={cn(
-                "h-full min-w-0 flex-1 bg-black text-sm text-white outline-none placeholder:text-zinc-500",
+                "h-full min-w-0 flex-1 bg-black text-base sm:text-sm text-white outline-none placeholder:text-zinc-500",
                 "[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none",
                 !isExpanded && "pointer-events-none cursor-pointer",
                 classNames?.input,

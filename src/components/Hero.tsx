@@ -58,7 +58,7 @@ export default function Hero() {
           className="
             relative
             w-full
-            min-h-screen
+            min-h-dvh
             lg:min-h-135
             mt-4 mb-20
             flex
