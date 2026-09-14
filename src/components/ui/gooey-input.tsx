@@ -1,5 +1,3 @@
-"use client";
-
 import {
   useState,
   useRef,
@@ -331,7 +329,7 @@ export function GooeyInput({
                   e.preventDefault();
                   handleSelectExample(example);
                 }}
-                className="text-left text-xs sm:text-sm text-zinc-300 hover:text-white hover:bg-neutral-800/80 p-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group"
+                className="text-left text-xs sm:text-sm text-zinc-300 hover:text-white hover:bg-neutral-800/80 p-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group "
               >
                 <span>{example}</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity text-zinc-400">

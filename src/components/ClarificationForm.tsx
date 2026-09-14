@@ -43,57 +43,68 @@ export default function ClarificationForm() {
     return "e.g. specify the value, condition, or rule you want to use";
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && allAnswered && !isBuilding) {
+      e.preventDefault();
+      buildExperiment();
+    }
+  };
+
   return (
-    <div className="w-full text-left rounded-3xl border border-zinc-800 bg-zinc-950 p-6 sm:p-8 shadow-xl transition-all duration-200">
+    <div className="w-full text-left rounded-2xl sm:rounded-3xl border border-zinc-800 bg-black/95 p-4 sm:p-8 shadow-xl transition-all duration-200">
       {/* Header */}
-      <div className="mb-6 border-b border-zinc-800/80 pb-5">
-        <h2 className="text-xl font-bold tracking-tight text-zinc-100 sm:text-2xl">
+      <div className="mb-5 sm:mb-6 border-b border-zinc-800/80 pb-4 sm:pb-5">
+        <h2 className="text-lg font-bold tracking-tight text-zinc-100 sm:text-2xl">
           Almost there.
         </h2>
 
-        <p className="mt-1 text-sm leading-relaxed text-zinc-400">
+        <p className="mt-1 text-xs sm:text-sm leading-relaxed text-zinc-400">
           We need a few details before we can build this experiment.
         </p>
       </div>
 
       {/* Questions Form */}
-      <div className="space-y-6">
-        {experiment.missingInformation.map((question, index) => {
+      <div className="space-y-5 sm:space-y-6">
+        {experiment.missingInformation.map((question) => {
           const isFilled = Boolean(clarifications[question]?.trim());
+          const fieldId = `clarification-${question.replace(/\s+/g, "-").toLowerCase()}`;
 
           return (
-            <div key={index} className="group relative space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-zinc-200 transition-colors group-focus-within:text-white">
+            <div key={question} className="group relative space-y-1.5">
+              <div className="flex items-start justify-between gap-2">
+                <label
+                  htmlFor={fieldId}
+                  className="text-xs sm:text-sm font-medium text-zinc-200 transition-colors group-focus-within:text-white cursor-pointer"
+                >
                   {question}
                 </label>
-
-                {isFilled && (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-800/50">
-                    <HiCheck className="h-3 w-3 text-emerald-400" />
-                    Completed
-                  </span>
-                )}
               </div>
 
-              <p className="text-xs text-zinc-500 leading-relaxed">
+              <p className="text-[11px] sm:text-xs text-zinc-500 leading-relaxed">
                 {getExample(question)}
               </p>
 
               <input
+                id={fieldId}
                 type="text"
                 value={clarifications[question] || ""}
                 onChange={(e) => setClarification(question, e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder="Enter your answer..."
+                autoCapitalize="none"
+                autoCorrect="off"
                 className="
                   w-full
                   rounded-xl
                   border
                   border-zinc-800
                   bg-zinc-900/60
-                  px-4
-                  py-3
-                  text-sm
+                  px-3.5
+                  py-2.5
+                  sm:px-4
+                  sm:py-3
+                  text-base
+                  sm:text-sm
                   text-zinc-100
                   placeholder:text-zinc-500
                   outline-none
@@ -113,17 +124,20 @@ export default function ClarificationForm() {
 
       {/* Build Button */}
       <button
+        type="button"
         onClick={buildExperiment}
         disabled={!allAnswered || isBuilding}
         className="
-          mt-7
+          mt-6
+          sm:mt-7
           relative
           w-full
           overflow-hidden
           rounded-xl
           bg-zinc-100
           text-zinc-900
-          py-3.5
+          py-3
+          sm:py-3.5
           text-sm
           font-semibold
           shadow-md
